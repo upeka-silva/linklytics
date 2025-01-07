@@ -4,19 +4,18 @@ import com.url.linklytics_.shortening.service.UserDetailsImpl;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.net.http.HttpRequest;
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-public class jwtUtils {
+
+public class JwtUtils {
 
        @Value("${jwt-secret}")
        private String jwtSecret;
