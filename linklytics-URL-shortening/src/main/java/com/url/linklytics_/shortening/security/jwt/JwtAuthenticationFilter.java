@@ -22,8 +22,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -47,7 +45,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (UsernameNotFoundException e) {
             e.printStackTrace();
         }
-
         filterChain.doFilter(request,response);
 
     }

@@ -28,10 +28,12 @@ public class WebSecurityConfiguration {
         return new JwtAuthenticationFilter();
     }
 
+    @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(){
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailService);
@@ -39,10 +41,11 @@ public class WebSecurityConfiguration {
        return daoAuthenticationProvider;
     }
 
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth->auth.
-                        requestMatchers("/api/**").permitAll().
+                        requestMatchers("/api/auth/**").permitAll().
                         requestMatchers("/api/urls/**").authenticated().
                         requestMatchers("/{shortUrl}").permitAll().anyRequest().authenticated());
 

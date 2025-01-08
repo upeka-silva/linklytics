@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 @Component
 public class JwtUtils {
 
-       @Value("${jwt-secret}")
+       @Value("${jwt.secret}")
        private String jwtSecret;
-       @Value("${jwt-expirationDate}")
+       @Value("${jwt.expirationDate}")
        private int expirationDate;
         //Authorization --> http header --> bearer <token>
       public String extractJwtToken(HttpServletRequest httpRequest){ //helper method for help extact the token form the http header
