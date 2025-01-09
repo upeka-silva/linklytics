@@ -1,6 +1,6 @@
 package com.url.linklytics_.shortening.model;
 import jakarta.persistence.*;
-import lombok.Data;
+
 
 @Entity
 @Table(name = "users")
