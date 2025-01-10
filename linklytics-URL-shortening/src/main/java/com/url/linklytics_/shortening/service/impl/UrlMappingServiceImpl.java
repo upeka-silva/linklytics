@@ -8,6 +8,8 @@ import com.url.linklytics_.shortening.service.UrlMappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -32,6 +34,15 @@ public class UrlMappingServiceImpl implements UrlMappingService {
         urlMappingRepository.save(urlMapping);
         return urlMappingMapper.toDto(urlMapping);
 
+    }
+
+    @Override
+    public List<UrlMappingDto> getUrlsByUserId(Long id) {
+        List<UrlMappingDto>urlMappingDtoList= new ArrayList<>();
+        urlMappingRepository.findAllByUserId(id).forEach((e)->urlMappingDtoList.add(
+                urlMappingMapper.toDto(e)
+        ));
+        return urlMappingDtoList;
     }
 
     private String generateShortUrl() {

@@ -6,12 +6,10 @@ import com.url.linklytics_.shortening.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,7 +23,7 @@ public class UrlMappingController {
 
     //{key,value}={originalUrl,shorterUrl}
     @PostMapping("/shorten")
-    @PreAuthorize("hasRole('USER')")   // this controller method is a authenticated method you cannot access this method without proper authentication
+//    @PreAuthorize("hasRole('USER')")   // this controller method is a authenticated method you cannot access this method without proper authentication
     public ResponseEntity<UrlMappingDto>creatShortUrl(@RequestBody Map<String,String>request, Principal principal){ //auto injected we dont need explicity say
          String originalUrl = request.get("originalUrl");
          User user= userService.findUserByUserName(principal.getName());
@@ -33,6 +31,23 @@ public class UrlMappingController {
          return ResponseEntity.ok(urlMappingDto);
 
     }
+
+    @GetMapping("/myUrls")
+//    @PreAuthorize("hasRole('USER')")   // this controller method is a authenticated method you cannot access this method without proper authentication
+    public ResponseEntity< List<UrlMappingDto>>getAllUserUrls(Principal principal){ //auto injected we dont need explicity say
+        User user = userService.findUserByUserName(principal.getName());
+        List<UrlMappingDto>urlMappingDtoList = urlMappingService.getUrlsByUserId(user.getId());
+        return ResponseEntity.ok(urlMappingDtoList);
+
+    }
+
+
+
+
+
+
+
+
 
 
 
