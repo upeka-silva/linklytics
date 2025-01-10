@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,11 @@ public class UserServiceImpl implements UserService {
             UserDetailsImpl userDetails1 = (UserDetailsImpl) authentication.getPrincipal();
             String token = jwtUtils.generateToken(userDetails1);// we have to use here type casting
         return new JwtAuthenticationResponse(token);
+    }
+
+    @Override
+    public User findUserByUserName(String name) {
+      return   userRepository.findByUserName(name).orElseThrow(()-> new UsernameNotFoundException("This user not found!"+name));
     }
 
 

@@ -8,4 +8,5 @@ import com.url.linklytics_.shortening.security.jwt.JwtAuthenticationResponse;
 public interface UserService {
     User userRegister(User user);
     JwtAuthenticationResponse authenticateUser(LogInRequest logInRequest);
+    User findUserByUserName(String name);
 }
