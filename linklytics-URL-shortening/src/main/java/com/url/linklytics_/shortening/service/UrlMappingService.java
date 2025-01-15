@@ -17,5 +17,5 @@ public interface UrlMappingService {
 
     List< ClickEventDto> getClickEventsByDate(String shortUrl, LocalDateTime start, LocalDateTime end);
 
-    Map<LocalDate,Long> getTotalClicksByUserAndDateShortUrl(User user, LocalDateTime start, LocalDateTime end);
+    Map<LocalDate,Long> getTotalClicksByUserAndDateShortUrl(User user, LocalDate start, LocalDate end);
 }

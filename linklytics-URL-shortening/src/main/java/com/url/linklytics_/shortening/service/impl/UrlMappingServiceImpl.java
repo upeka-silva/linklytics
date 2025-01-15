@@ -78,7 +78,7 @@ public class UrlMappingServiceImpl implements UrlMappingService {
         List<UrlMapping> urlMappings = urlMappingRepository.findAllByUserId(user.getId());
         List<ClickEvent> clickEvents = clickEventRepository.
                 findByUrlMappingInAndCreatedDateBetween(urlMappings, start.atStartOfDay(), end.plusDays(1).atStartOfDay());
-        return   clickEvents.stream().collect(Collectors.groupingBy(clickEvent -> clickEvent.getCreatedDate().toLocalDate(),Collectors.counting()));
+        return clickEvents.stream().collect(Collectors.groupingBy(clickEvent -> clickEvent.getCreatedDate().toLocalDate(),Collectors.counting()));
     }
 
     private String generateShortUrl() {
