@@ -2,6 +2,7 @@ package com.url.linklytics_.shortening.service.impl;
 import com.url.linklytics_.shortening.dtos.ClickEventDto;
 import com.url.linklytics_.shortening.dtos.UrlMappingDto;
 import com.url.linklytics_.shortening.mappers.UrlMappingMapper;
+import com.url.linklytics_.shortening.model.ClickEvent;
 import com.url.linklytics_.shortening.model.UrlMapping;
 import com.url.linklytics_.shortening.model.User;
 import com.url.linklytics_.shortening.repo.ClickEventRepository;
@@ -9,11 +10,10 @@ import com.url.linklytics_.shortening.repo.UrlMappingRepository;
 import com.url.linklytics_.shortening.service.UrlMappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -59,10 +59,9 @@ public class UrlMappingServiceImpl implements UrlMappingService {
              return  clickEventRepository.
                      findByUrlMappingAndCreatedDateBetween(selectedUrlMapping,start,end)
                      .stream().
-                     collect(Collectors.groupingBy(clickEvent -> clickEvent.
+                     collect(Collectors.groupingBy(clickEvent -> clickEvent.             //grouping the data by dates
                              getCreatedDate().toLocalDate(),
                              Collectors.counting())).entrySet().stream().map(localDateLongEntry ->{
-
                                  ClickEventDto clickEventDto = new ClickEventDto();
                                  clickEventDto.setClickDate(localDateLongEntry.getKey());
                                  clickEventDto.setCount(localDateLongEntry.getValue());
@@ -73,12 +72,21 @@ public class UrlMappingServiceImpl implements UrlMappingService {
         return null;
     }
 
+    @Override
+    public Map<LocalDate, Long> getTotalClicksByUserAndDateShortUrl(User user, LocalDate start, LocalDate end) {
+
+        List<UrlMapping> urlMappings = urlMappingRepository.findAllByUserId(user.getId());
+        List<ClickEvent> clickEvents = clickEventRepository.
+                findByUrlMappingInAndCreatedDateBetween(urlMappings, start.atStartOfDay(), end.plusDays(1).atStartOfDay());
+        return   clickEvents.stream().collect(Collectors.groupingBy(clickEvent -> clickEvent.getCreatedDate().toLocalDate(),Collectors.counting()));
+    }
+
     private String generateShortUrl() {
 
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789";
         Random random = new Random();
         StringBuilder shortUrl = new StringBuilder(8);
-        for(int i =0; i<8 ; i++){
+        for(int i = 0 ; i<8 ; i++){
             shortUrl.append(characters.charAt(random.nextInt(characters.length())));
         }
         return shortUrl.toString();

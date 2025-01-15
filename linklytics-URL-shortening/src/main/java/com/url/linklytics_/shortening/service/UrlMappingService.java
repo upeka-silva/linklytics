@@ -4,8 +4,10 @@ import com.url.linklytics_.shortening.dtos.ClickEventDto;
 import com.url.linklytics_.shortening.dtos.UrlMappingDto;
 import com.url.linklytics_.shortening.model.User;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface UrlMappingService {
 
@@ -15,6 +17,5 @@ public interface UrlMappingService {
 
     List< ClickEventDto> getClickEventsByDate(String shortUrl, LocalDateTime start, LocalDateTime end);
 
-
-
+    Map<LocalDate,Long> getTotalClicksByUserAndDateShortUrl(User user, LocalDateTime start, LocalDateTime end);
 }
