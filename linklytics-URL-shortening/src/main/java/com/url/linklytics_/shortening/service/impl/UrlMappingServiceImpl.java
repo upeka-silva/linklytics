@@ -9,6 +9,8 @@ import com.url.linklytics_.shortening.repo.ClickEventRepository;
 import com.url.linklytics_.shortening.repo.UrlMappingRepository;
 import com.url.linklytics_.shortening.service.UrlMappingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -79,6 +81,25 @@ public class UrlMappingServiceImpl implements UrlMappingService {
         List<ClickEvent> clickEvents = clickEventRepository.
                 findByUrlMappingInAndCreatedDateBetween(urlMappings, start.atStartOfDay(), end.plusDays(1).atStartOfDay());
         return clickEvents.stream().collect(Collectors.groupingBy(clickEvent -> clickEvent.getCreatedDate().toLocalDate(),Collectors.counting()));
+    }
+
+
+    @Override
+    public ResponseEntity<Void> getOriginalUrl(String shortUrl) {
+        UrlMapping selectedUrlMapping = urlMappingRepository.findByShorterUrl(shortUrl);
+        if (selectedUrlMapping != null){
+            selectedUrlMapping.setClickCount(selectedUrlMapping.getClickCount()+1);
+            urlMappingRepository.save(selectedUrlMapping);
+            ClickEvent clickEvent = new ClickEvent();
+            clickEvent.setCreatedDate(LocalDateTime.now());
+            clickEvent.setUrlMapping(selectedUrlMapping);
+            clickEventRepository.save(clickEvent);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add("Location",selectedUrlMapping.getOriginalUrl());
+            return ResponseEntity.status(302).headers(httpHeaders).build();
+        }else{
+            return ResponseEntity.notFound().build();
+        }
     }
 
     private String generateShortUrl() {
