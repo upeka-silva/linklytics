@@ -1,13 +1,11 @@
 package com.url.linklytics_.shortening.controller;
 import com.url.linklytics_.shortening.dtos.ClickEventDto;
 import com.url.linklytics_.shortening.dtos.UrlMappingDto;
-import com.url.linklytics_.shortening.model.ClickEvent;
 import com.url.linklytics_.shortening.model.User;
 import com.url.linklytics_.shortening.service.UrlMappingService;
 import com.url.linklytics_.shortening.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -58,15 +56,18 @@ public class UrlMappingController {
 
     }
 
+    @GetMapping("/totalClicks")
+//    @PreAuthorize("hasRole('USER')")   // this controller method is a authenticated method you cannot access this method without proper authentication
+    public ResponseEntity<Map<LocalDate,Long>>getTotalClicksBYDate(Principal principal
+            ,@RequestParam("startDate")String startDate
+            ,@RequestParam("endDate")String  endDate){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE;
+        User user = userService.findUserByUserName(principal.getName());
+        LocalDate start = LocalDate.parse(startDate,dateTimeFormatter);
+        LocalDate end = LocalDate.parse(endDate,dateTimeFormatter);
+        return ResponseEntity.ok(urlMappingService.getTotalClicksByUserAndDateShortUrl(user, start, end));
 
-
-
-
-
-
-
-
-
+    }
 
 
 }
